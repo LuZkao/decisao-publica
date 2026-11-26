@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#10243a">
+<title>Decisão Pública — E você, o que faria?</title>
+<style>
+:root{
+  --navy:#10243a;--navy2:#183650;--blue:#2878b9;--blue2:#dcecf8;
+  --ink:#172638;--muted:#68788a;--paper:#f4f7fa;--white:#fff;
+  --line:#dce4eb;--green:#16845b;--amber:#b7791f;--shadow:0 14px 38px rgba(16,36,58,.10);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh}
+button{font:inherit;cursor:pointer}
+button:focus-visible{outline:3px solid #71b7ed;outline-offset:3px}
+.app{min-height:100vh;display:flex;flex-direction:column}
+.topbar{height:66px;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(18px,5vw,64px)}
+.brand{display:flex;align-items:center;gap:11px;font-weight:800;letter-spacing:.01em}
+.brand-mark{width:34px;height:34px;border-radius:10px;background:#fff;color:var(--navy);display:grid;place-items:center;font-weight:900}
+.top-meta{font-size:.78rem;color:#c6d5e2}
+main{width:min(100% - 32px,900px);margin:0 auto;padding:34px 0 54px;flex:1}
+.hero{background:linear-gradient(135deg,#10243a,#1c4565);color:#fff;border-radius:24px;padding:clamp(26px,6vw,54px);box-shadow:var(--shadow);position:relative;overflow:hidden}
+.hero:after{content:"";position:absolute;width:260px;height:260px;border:1px solid rgba(255,255,255,.13);border-radius:50%;right:-70px;top:-100px;box-shadow:0 0 0 34px rgba(255,255,255,.035),0 0 0 68px rgba(255,255,255,.025)}
+.eyebrow{text-transform:uppercase;letter-spacing:.13em;font-size:.72rem;font-weight:800;color:#a9cbe4}
+h1{font-size:clamp(2rem,6vw,3.5rem);line-height:1.04;max-width:650px;margin:14px 0}
+.hero p{color:#d5e2ec;max-width:570px;line-height:1.65;margin:14px 0 0}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+.btn{border:0;border-radius:12px;padding:14px 19px;font-weight:750;transition:.18s transform,.18s background}
+.btn:hover{transform:translateY(-1px)}
+.btn-primary{background:var(--blue);color:#fff}
+.btn-light{background:#fff;color:var(--navy)}
+.btn-outline{background:transparent;color:var(--navy);border:1px solid var(--line)}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.menu-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:20px}
+.menu-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px;text-align:left;box-shadow:0 5px 18px rgba(16,36,58,.04)}
+.menu-card:hover{border-color:#8ab9dc;transform:translateY(-2px)}
+.menu-icon{width:42px;height:42px;border-radius:12px;background:var(--blue2);color:var(--navy);display:grid;place-items:center;font-size:1.25rem;margin-bottom:15px}
+.menu-card strong{display:block;font-size:1.05rem}
+.menu-card span{display:block;color:var(--muted);font-size:.87rem;line-height:1.5;margin-top:6px}
+.section-kicker{color:var(--blue);font-size:.75rem;text-transform:uppercase;letter-spacing:.12em;font-weight:850}
+.panel{background:#fff;border:1px solid var(--line);border-radius:20px;padding:clamp(20px,4vw,34px);box-shadow:var(--shadow)}
+.screen-title{font-size:clamp(1.65rem,5vw,2.4rem);margin:8px 0 10px;color:var(--navy)}
+.lead{color:var(--muted);line-height:1.65}
+.category-screen{min-height:400px;display:flex;flex-direction:column;justify-content:center;background:radial-gradient(circle at 88% 12%,color-mix(in srgb,var(--cat,var(--blue)) 60%,transparent),transparent 46%),linear-gradient(145deg,#10243a,#1d496b);color:white;border-radius:24px;padding:clamp(28px,7vw,60px);position:relative;overflow:hidden}
+.category-screen h2{font-size:clamp(2.4rem,8vw,4.4rem);margin:12px 0}
+.category-screen p{color:#d7e5ef;max-width:560px;line-height:1.6}
+.category-screen .eyebrow{color:#a9cbe4}
+.category-screen .btn{align-self:flex-start;margin-top:20px}
+.category-screen:before{content:"";position:absolute;left:0;top:0;bottom:0;width:10px;background:var(--cat,var(--blue))}
+.cat-row{padding:14px 16px;background:#f5f8fa;border-radius:12px;border-left:5px solid var(--cat)}
+.cat-head{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.cat-name{font-weight:800;font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;color:var(--cat-d)}
+.cat-dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--cat);margin-right:8px}
+.cat-title{margin:5px 0 9px;color:var(--navy);font-weight:650}
+.cat-bar{height:6px;background:#e2e9ef;border-radius:99px;overflow:hidden}
+.cat-bar>div{height:100%;background:var(--cat);border-radius:99px}
+.cat-note{margin-top:8px;font-size:.84rem;color:var(--muted);line-height:1.5}
+.progress-wrap{margin-bottom:20px}
+.progress-label{display:flex;justify-content:space-between;color:var(--muted);font-size:.82rem;margin-bottom:8px}
+.progress{height:7px;background:#e2e9ef;border-radius:99px;overflow:hidden}
+.progress>div{height:100%;background:var(--cat,var(--blue));border-radius:99px;transition:width .25s}
+.tag{display:inline-flex;align-items:center;padding:6px 10px;border-radius:999px;background:color-mix(in srgb,var(--cat,var(--blue)) 16%,#fff);color:var(--cat-d,#1c5d8c);font-size:.72rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
+.situation-title{font-size:clamp(1.45rem,4vw,2rem);color:var(--navy);margin:14px 0 12px}
+.situation-text{font-size:1rem;line-height:1.75;color:#33465a}
+.resource-box{margin-top:22px;padding:17px;border-radius:14px;background:#f0f5f9;border-left:4px solid var(--cat,var(--blue))}
+.resource-box strong{display:block;color:var(--navy);margin-bottom:5px}
+.resource-box p{margin:0;color:#536579;line-height:1.6}
+.actions{display:flex;justify-content:space-between;gap:12px;margin-top:24px;flex-wrap:wrap}
+.options{display:grid;gap:12px;margin-top:18px}
+.option{width:100%;display:flex;gap:14px;align-items:flex-start;text-align:left;padding:17px;border:1.5px solid var(--line);border-radius:15px;background:#fff;color:var(--ink);transition:.15s}
+.option:hover{border-color:#6ca8d2;background:#f8fbfd}
+.option.selected{border-color:var(--cat,var(--blue));background:color-mix(in srgb,var(--cat,var(--blue)) 9%,#fff);box-shadow:0 0 0 3px color-mix(in srgb,var(--cat,var(--blue)) 24%,transparent)}
+.option-letter{width:34px;height:34px;flex:0 0 34px;border-radius:10px;background:#eaf0f5;color:var(--navy);display:grid;place-items:center;font-weight:900}
+.option.selected .option-letter{background:var(--cat-d,var(--blue));color:white}
+.option-copy strong{display:block;line-height:1.45}
+.option-copy small{display:block;color:var(--muted);line-height:1.5;margin-top:6px}
+.notice{margin-top:18px;padding:14px 16px;background:#eef7f2;border:1px solid #cce8d8;color:#236346;border-radius:13px;font-size:.9rem;line-height:1.5}
+.result-score{font-size:2.6rem;font-weight:900;color:var(--navy);letter-spacing:-.04em}
+.score-pill{display:inline-flex;align-items:center;padding:7px 11px;border-radius:99px;background:#e9f6ef;color:#176344;font-weight:850;font-size:.82rem}
+.feedback{margin-top:20px;padding:18px;border-radius:15px;background:#f3f6f9;line-height:1.7;color:#43566a}
+.feedback h3{margin:0 0 8px;color:var(--navy);font-size:1rem}
+.result-list{display:grid;gap:10px;margin-top:18px}
+.result-row{display:flex;justify-content:space-between;gap:14px;padding:14px 16px;background:#f5f8fa;border-radius:12px;align-items:center}
+.result-row span{color:var(--muted);font-size:.9rem}
+.result-row strong{color:var(--navy)}
+.footer{text-align:center;color:#8190a0;font-size:.75rem;padding:18px}
+.hidden{display:none!important}
+.grade{font-size:4.2rem;font-weight:950;color:var(--navy);line-height:1}
+.small-note{font-size:.8rem;color:var(--muted);line-height:1.5}
+@media(max-width:600px){
+ .topbar{height:58px;padding:0 16px}.top-meta{font-size:.68rem}
+ main{width:min(100% - 24px,900px);padding:20px 0 38px}
+ .hero{border-radius:19px;padding:28px 22px}
+ .menu-grid{grid-template-columns:1fr}
+ .menu-card{padding:18px}
+ .panel{border-radius:17px;padding:20px}
+ .actions{flex-direction:column-reverse}
+ .actions .btn{width:100%}
+ .category-screen{min-height:390px;border-radius:19px;padding:30px 23px}
+ .option{padding:14px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand"><div class="brand-mark">DP</div><span>Decisão Pública</span></div>
+    <div class="top-meta">SANTA AURORA · PROTÓTIPO</div>
+  </header>
+  <main id="app"></main>
+  <footer class="footer">Decisão Pública — E você, o que faria? · Projeto acadêmico</footer>
+</div>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script>
+const cards = [
+{category:"Saúde",title:"Filas intermináveis",situation:"A Unidade Básica de Saúde do bairro Primavera enfrenta filas cada vez maiores. Moradores relatam que precisam esperar semanas por consultas médicas, enquanto a equipe disponível não consegue atender à demanda.",resources:"A prefeitura possui R$ 180 mil para enfrentar o problema, mas não consegue ampliar permanentemente seu quadro de funcionários neste momento.",options:[
+{title:"Contratar uma equipe temporária de profissionais",detail:"Ampliar os atendimentos durante alguns meses, priorizando consultas represadas.",points:10,why:"A contratação temporária amplia a capacidade de atendimento e permite reduzir diretamente o acúmulo de consultas, respeitando a limitação de não ampliar permanentemente o quadro de funcionários."},
+{title:"Implantar um sistema de agendamento e triagem",detail:"Reorganizar os atendimentos, priorizando casos urgentes e reduzindo faltas e consultas desnecessárias.",points:5,why:"A reorganização melhora o fluxo e ajuda a priorizar os casos urgentes, mas não cria novas vagas de atendimento nem aumenta a capacidade da equipe."},
+{title:"Realizar uma campanha de divulgação",detail:"Informar a população sobre os horários e serviços disponíveis, incentivando o uso adequado da unidade.",points:2,why:"A divulgação pode orientar os moradores, mas tem alcance limitado diante da falta de profissionais e da fila acumulada."}]},
+{category:"Saúde",title:"Farmácia municipal vazia",situation:"A farmácia municipal está com estoques baixos de medicamentos essenciais. Alguns pacientes precisam interromper tratamentos ou comprar remédios por conta própria.",resources:"Existem R$ 120 mil destinados à regularização do abastecimento. A prefeitura também identificou falhas no planejamento das compras e no controle de estoque.",options:[
+{title:"Realizar uma compra emergencial",detail:"Adquirir imediatamente os medicamentos em falta, priorizando aqueles necessários para tratamentos contínuos.",points:10,why:"A compra emergencial atende à necessidade imediata dos pacientes. Para evitar que o problema se repita, ela deve ser acompanhada de planejamento e controle de estoque."},
+{title:"Revisar o sistema de controle de estoque",detail:"Implantar um acompanhamento periódico das entradas e saídas, reduzindo o risco de novas faltas.",points:5,why:"O controle de estoque é importante para prevenir novas falhas, mas sozinho não repõe os medicamentos que já estão em falta."},
+{title:"Distribuir os medicamentos disponíveis entre as unidades",detail:"Redistribuir os estoques existentes para tentar atender mais bairros, sem realizar novas aquisições.",points:2,why:"A redistribuição pode aliviar a situação em alguns locais, mas apenas desloca recursos que já são insuficientes e pode criar desabastecimento em outras unidades."}]},
+{category:"Saúde",title:"Uma unidade esquecida",situation:"A unidade de saúde do bairro São Miguel apresenta infiltrações, equipamentos antigos e problemas de acessibilidade. A situação prejudica profissionais e moradores.",resources:"A prefeitura possui R$ 250 mil para melhorias na unidade. Uma reforma completa exigiria um investimento superior ao orçamento disponível.",options:[
+{title:"Realizar uma reforma prioritária",detail:"Corrigir infiltrações, adaptar os acessos e substituir os equipamentos mais comprometidos, priorizando segurança e atendimento.",points:10,why:"A reforma prioriza os problemas estruturais e de acessibilidade mais críticos, usando o orçamento disponível de forma direcionada."},
+{title:"Substituir os equipamentos mais antigos",detail:"Concentrar os recursos na modernização dos equipamentos médicos, mantendo a estrutura física para uma reforma posterior.",points:5,why:"A modernização pode melhorar a capacidade de atendimento, mas deixa infiltrações e barreiras de acessibilidade pendentes."},
+{title:"Realizar apenas reparos emergenciais",detail:"Corrigir os problemas mais visíveis e manter o restante da estrutura até que existam novos recursos.",points:2,why:"Os reparos oferecem alívio temporário, mas não enfrentam de maneira organizada os problemas estruturais e de acessibilidade."}]},
+{category:"Educação",title:"O abandono das salas de aula",situation:"Uma escola municipal registra aumento na evasão escolar. A direção aponta dificuldades financeiras das famílias, desinteresse dos alunos e falta de acompanhamento individualizado.",resources:"R$ 150 mil estão disponíveis para desenvolver ações de combate à evasão escolar.",options:[
+{title:"Criar um programa de acompanhamento escolar",detail:"Acompanhar alunos com faltas frequentes, identificar dificuldades e estabelecer contato com suas famílias.",points:10,why:"O acompanhamento permite identificar as causas individuais da evasão e agir diretamente com estudantes e famílias."},
+{title:"Oferecer atividades extracurriculares",detail:"Criar oficinas esportivas, culturais e educacionais para incentivar a participação dos estudantes na escola.",points:5,why:"As atividades podem melhorar o vínculo dos alunos com a escola, mas não identificam nem resolvem todas as dificuldades que levam ao abandono."},
+{title:"Realizar uma campanha de conscientização",detail:"Desenvolver campanhas sobre a importância da frequência escolar, envolvendo estudantes e responsáveis.",points:2,why:"A campanha informa e sensibiliza, mas tem alcance limitado quando não é acompanhada de ações individualizadas."}]},
+{category:"Educação",title:"Professores insuficientes",situation:"A rede municipal enfrenta falta de professores em disciplinas importantes. Algumas turmas estão sobrecarregadas e outras tiveram aulas reduzidas, prejudicando o calendário escolar.",resources:"R$ 200 mil estão disponíveis para enfrentar a falta de profissionais, sem possibilidade de realizar um concurso público imediato.",options:[
+{title:"Realizar contratações temporárias",detail:"Contratar professores temporários para preencher as vagas mais urgentes e normalizar o calendário escolar.",points:10,why:"As contratações atendem diretamente à falta de profissionais e ajudam a recuperar a oferta de aulas, respeitadas as regras legais aplicáveis."},
+{title:"Redistribuir os professores da rede",detail:"Reorganizar a distribuição dos profissionais entre as escolas, priorizando aquelas com maior déficit.",points:5,why:"A redistribuição pode melhorar a situação de algumas escolas, mas corre o risco de transferir a sobrecarga para outras."},
+{title:"Reduzir temporariamente a carga horária das disciplinas",detail:"Adaptar o calendário escolar para atender à disponibilidade atual de professores.",points:2,why:"A redução de aulas prejudica a aprendizagem e pode comprometer o cumprimento da carga horária escolar."}]},
+{category:"Educação",title:"Uma escola em más condições",situation:"Uma escola da zona rural apresenta problemas no telhado, banheiros deteriorados e mobiliário danificado. A comunidade cobra providências, mas a prefeitura possui outras reformas pendentes.",resources:"R$ 180 mil estão disponíveis para melhorias na estrutura da escola.",options:[
+{title:"Executar uma reforma por etapas",detail:"Priorizar os problemas que oferecem riscos à segurança e ao funcionamento da escola, planejando as demais melhorias conforme os recursos.",points:10,why:"A reforma por etapas permite enfrentar os problemas mais urgentes sem ultrapassar o orçamento disponível."},
+{title:"Substituir o mobiliário e realizar pequenos reparos",detail:"Melhorar as condições das salas de aula e corrigir os problemas estruturais menos graves.",points:5,why:"A troca de mobiliário melhora o ambiente de aprendizagem, mas deixa problemas estruturais importantes pendentes."},
+{title:"Adiar a reforma até conseguir recursos adicionais",detail:"Manter a estrutura atual e aguardar maior disponibilidade financeira para uma intervenção ampla.",points:2,why:"Adiar todas as intervenções mantém a comunidade exposta às condições atuais, inclusive a possíveis riscos à segurança."}]},
+{category:"Obras e urbanismo",title:"Ruas que viraram obstáculos",situation:"Diversas ruas dos bairros mais afastados apresentam buracos, pavimentação deteriorada e dificuldades de circulação. O problema afeta o transporte público, motoristas e serviços de emergência.",resources:"R$ 400 mil estão disponíveis para recuperação da malha viária.",options:[
+{title:"Priorizar as vias de maior circulação",detail:"Recuperar primeiro as ruas utilizadas pelo transporte público, ambulâncias e serviços essenciais, considerando também seu estado de conservação.",points:10,why:"A priorização técnica melhora a circulação nas vias mais importantes e considera o impacto dos problemas sobre serviços essenciais."},
+{title:"Dividir os recursos igualmente entre os bairros",detail:"Realizar reparos em todos os bairros afetados, distribuindo os investimentos de maneira uniforme.",points:5,why:"A distribuição atende mais bairros, mas pode deixar pontos críticos sem solução adequada, independentemente da gravidade e do fluxo de cada via."},
+{title:"Realizar operações de tapa-buracos sem planejamento",detail:"Corrigir os buracos mais visíveis conforme as reclamações recebidas pela prefeitura.",points:2,why:"Reparos isolados e sem diagnóstico podem ter baixa durabilidade e não resolvem problemas estruturais da pavimentação."}]},
+{category:"Obras e urbanismo",title:"Uma cidade pouco acessível",situation:"Calçadas irregulares, ausência de rampas e obstáculos nas vias dificultam a circulação de pessoas com deficiência, idosos e pessoas com mobilidade reduzida.",resources:"R$ 160 mil estão disponíveis para melhorias de acessibilidade em espaços públicos.",options:[
+{title:"Elaborar um plano de acessibilidade urbana",detail:"Mapear os principais pontos críticos e executar adaptações prioritárias em calçadas, travessias e prédios públicos.",points:10,why:"O planejamento permite identificar barreiras e organizar intervenções que formem trajetos mais acessíveis, em vez de resolver pontos isolados."},
+{title:"Instalar rampas em locais de maior circulação",detail:"Concentrar os recursos na construção de rampas em cruzamentos e espaços públicos movimentados.",points:5,why:"A instalação de rampas resolve barreiras específicas, mas não garante que todo o percurso seja acessível."},
+{title:"Realizar uma campanha de conscientização",detail:"Orientar comerciantes e moradores sobre a importância de manter calçadas livres e acessíveis.",points:2,why:"A conscientização é importante, mas não substitui as adaptações físicas necessárias nem corrige calçadas irregulares."}]},
+{category:"Obras e urbanismo",title:"A obra que não termina",situation:"A construção de um centro comunitário está paralisada há meses. A obra já consumiu parte dos recursos previstos, e a prefeitura precisa investigar os motivos do atraso e decidir como proceder.",resources:"R$ 100 mil adicionais estão reservados para encaminhar a conclusão do projeto.",options:[
+{title:"Realizar uma auditoria e revisar o contrato",detail:"Investigar as causas da paralisação, verificar os pagamentos e avaliar as medidas legais e administrativas cabíveis antes de retomar a obra.",points:10,why:"A análise permite identificar responsabilidades, verificar a execução contratual e evitar novos prejuízos antes de decidir como retomar a obra."},
+{title:"Negociar um novo cronograma com a empresa",detail:"Buscar um acordo para estabelecer novos prazos e exigir a retomada dos trabalhos, acompanhando as etapas.",points:5,why:"A renegociação pode acelerar a obra, mas sem esclarecer as causas do atraso pode permitir que os mesmos problemas se repitam."},
+{title:"Contratar imediatamente outra empresa",detail:"Encerrar a contratação atual e iniciar um novo processo para escolher uma empresa responsável pela conclusão.",points:2,why:"Uma nova contratação sem análise prévia pode gerar custos, atrasos e disputas administrativas. É necessário verificar primeiro a situação contratual e as medidas cabíveis."}]},
+{category:"Segurança",title:"Ruas às escuras",situation:"Moradores de vários bairros reclamam da falta de iluminação pública. Ruas e praças ficam praticamente às escuras durante a noite, aumentando a sensação de insegurança e dificultando a circulação.",resources:"R$ 220 mil estão disponíveis para melhorias na iluminação pública.",options:[
+{title:"Substituir e ampliar a iluminação nos pontos críticos",detail:"Identificar as áreas mais vulneráveis e instalar equipamentos mais eficientes, priorizando ruas e espaços públicos com maior circulação.",points:10,why:"A intervenção direcionada melhora a iluminação onde o problema é mais grave e permite priorizar os recursos disponíveis."},
+{title:"Trocar as lâmpadas de todos os bairros",detail:"Realizar uma substituição geral das lâmpadas existentes, buscando melhorar a iluminação de maneira abrangente.",points:5,why:"A substituição geral pode trazer benefícios, mas não necessariamente prioriza as áreas críticas e pode diluir os recursos."},
+{title:"Instalar câmeras de monitoramento",detail:"Utilizar os recursos para ampliar o monitoramento de algumas áreas públicas, mantendo a iluminação atual.",points:2,why:"Câmeras não resolvem a falta de iluminação e sua eficácia pode ser prejudicada pelas condições existentes."}]},
+{category:"Segurança",title:"Jovens sem oportunidades",situation:"Um bairro de Santa Aurora apresenta aumento de ocorrências envolvendo adolescentes. A região possui poucas opções de lazer, atividades esportivas e projetos sociais para os jovens.",resources:"R$ 130 mil estão disponíveis para desenvolver ações de prevenção e inclusão social.",options:[
+{title:"Criar um programa permanente de atividades sociais",detail:"Oferecer oficinas esportivas, culturais e profissionalizantes, com acompanhamento de profissionais e participação da comunidade.",points:10,why:"O programa permanente cria oportunidades, vínculos comunitários e alternativas de participação para os jovens."},
+{title:"Organizar eventos esportivos e culturais",detail:"Promover campeonatos, apresentações e atividades recreativas em períodos específicos do ano.",points:5,why:"Os eventos promovem integração, mas têm alcance limitado no tempo e não oferecem acompanhamento contínuo."},
+{title:"Aumentar as rondas de segurança na região",detail:"Solicitar maior presença dos agentes municipais nos espaços públicos frequentados pelos jovens.",points:2,why:"O reforço das rondas pode contribuir para a segurança, mas não enfrenta as causas sociais relacionadas à falta de oportunidades."}]},
+{category:"Segurança",title:"Guarda municipal sobrecarregada",situation:"A Guarda Municipal enfrenta dificuldades para atender a todos os bairros devido ao número limitado de agentes, veículos e equipamentos. A população cobra maior presença nas áreas públicas.",resources:"R$ 200 mil estão disponíveis para melhorar a capacidade operacional da Guarda Municipal.",options:[
+{title:"Reorganizar o patrulhamento e modernizar os equipamentos",detail:"Avaliar as áreas com maior demanda, redistribuir equipes e investir na manutenção dos veículos e equipamentos essenciais.",points:10,why:"A reorganização melhora o uso dos recursos existentes e a capacidade de atendimento, considerando as necessidades de diferentes bairros."},
+{title:"Concentrar as equipes nos bairros com mais ocorrências",detail:"Direcionar a maior parte dos agentes para as regiões com mais registros, reduzindo temporariamente a presença em outros bairros.",points:5,why:"A concentração pode reduzir ocorrências em algumas regiões, mas deixa outras áreas com menor cobertura."},
+{title:"Investir em materiais de divulgação institucional",detail:"Produzir campanhas para informar a população sobre os canais de atendimento e os serviços prestados pela Guarda Municipal.",points:2,why:"A divulgação melhora o acesso à informação, mas não soluciona as limitações de pessoal, veículos e equipamentos."}]},
+{category:"Serviços básicos",title:"Lixo acumulado",situation:"Moradores de diferentes bairros denunciam atrasos na coleta de lixo. Sacos de resíduos se acumulam nas ruas, causando mau cheiro, atraindo animais e gerando reclamações.",resources:"R$ 170 mil estão disponíveis para melhorar a prestação do serviço de coleta.",options:[
+{title:"Revisar as rotas e a frequência da coleta",detail:"Mapear os bairros mais afetados, reorganizar os trajetos dos caminhões e estabelecer um cronograma de acompanhamento do serviço.",points:10,why:"A revisão das rotas atua na organização do serviço e permite corrigir falhas recorrentes de planejamento."},
+{title:"Contratar veículos temporariamente",detail:"Alugar caminhões adicionais para reforçar a coleta nos bairros com maior acúmulo de resíduos.",points:5,why:"Os veículos adicionais ajudam a reduzir o acúmulo imediato, mas aumentam os custos e não corrigem possíveis falhas de planejamento."},
+{title:"Realizar uma campanha de descarte consciente",detail:"Orientar os moradores sobre os horários e locais adequados para colocar o lixo, buscando reduzir o descarte irregular.",points:2,why:"A campanha pode melhorar o descarte, mas não resolve atrasos na coleta nem substitui a prestação regular do serviço."}]},
+{category:"Serviços básicos",title:"Água para poucos",situation:"Comunidades rurais de Santa Aurora enfrentam interrupções frequentes no abastecimento de água. Em períodos de estiagem, algumas famílias precisam percorrer longas distâncias para conseguir água.",resources:"R$ 300 mil estão disponíveis para melhorar o abastecimento nas comunidades rurais.",options:[
+{title:"Recuperar e ampliar a infraestrutura de abastecimento",detail:"Avaliar os sistemas existentes, reparar pontos comprometidos e ampliar a capacidade de armazenamento e distribuição.",points:10,why:"A recuperação da infraestrutura enfrenta as causas das interrupções e oferece uma solução mais duradoura, com planejamento técnico."},
+{title:"Distribuir água por caminhões-pipa",detail:"Organizar atendimento emergencial às comunidades mais afetadas enquanto o problema persiste.",points:5,why:"Os caminhões-pipa garantem atendimento imediato, mas dependem de gastos contínuos e não corrigem as falhas do sistema."},
+{title:"Instalar reservatórios individuais nas famílias",detail:"Distribuir reservatórios para armazenamento doméstico de água, sem realizar intervenções no sistema coletivo.",points:2,why:"Os reservatórios ajudam a armazenar água quando há fornecimento, mas não garantem o abastecimento nem resolvem as interrupções."}]},
+{category:"Serviços básicos",title:"O esgoto a céu aberto",situation:"Em uma região periférica, moradores convivem com esgoto exposto e ausência de infraestrutura adequada de saneamento. A situação representa riscos à saúde e prejudica a qualidade de vida da comunidade.",resources:"R$ 350 mil estão disponíveis para iniciar intervenções de saneamento na região.",options:[
+{title:"Elaborar e iniciar um projeto de implantação da rede de esgoto",detail:"Realizar estudos técnicos, definir áreas prioritárias e iniciar as obras de implantação da infraestrutura de saneamento.",points:10,why:"O projeto enfrenta o problema estrutural, embora sua execução exija planejamento técnico, articulação institucional e continuidade de investimentos."},
+{title:"Realizar limpeza e manutenção dos pontos críticos",detail:"Contratar serviços para remover resíduos, desobstruir canais e reduzir os problemas mais urgentes.",points:5,why:"A limpeza reduz riscos imediatos, mas não elimina a ausência de rede de esgoto nem resolve a causa estrutural."},
+{title:"Distribuir orientações sanitárias aos moradores",detail:"Promover ações educativas sobre higiene, descarte de resíduos e prevenção de doenças relacionadas ao esgoto exposto.",points:2,why:"A orientação sanitária ajuda na prevenção, porém não substitui a infraestrutura necessária de saneamento."}]}
+];
+
+const app=document.getElementById("app");
+let order=[],optOrder=[],round=0,score=0,answers=[],chosen=null,currentScreen="home";
+const catColors={"Saúde":["#0f766e","#0b5e58"],"Educação":["#e0a800","#8a6500"],"Obras e urbanismo":["#c0603a","#9a4526"],"Segurança":["#7c4dbd","#5f3a96"],"Serviços básicos":["#2878b9","#1c5d8c"]};
+function paint(cat){if(cat){app.style.setProperty("--cat",catColors[cat][0]);app.style.setProperty("--cat-d",catColors[cat][1]);}else{app.style.removeProperty("--cat");app.style.removeProperty("--cat-d");}}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+const categoryDescriptions={
+"Saúde":"Gestão dos serviços de saúde municipal",
+"Educação":"Acesso, qualidade e permanência na educação",
+"Obras e urbanismo":"Infraestrutura, planejamento e desenvolvimento urbano",
+"Segurança":"Prevenção, proteção e segurança municipal",
+"Serviços básicos":"Serviços essenciais e qualidade de vida"
+};
+function renderHome(){
+ stopMp();paint(null);currentScreen="home";
+ app.innerHTML=`
+ <section class="hero">
+  <div class="eyebrow">Uma cidade · muitas decisões</div>
+  <h1>Decisão Pública</h1>
+  <div style="font-size:1.12rem;font-weight:650;color:#d5e2ec">E você, o que faria?</div>
+  <p>Assuma o desafio de administrar Santa Aurora. Você terá recursos limitados, problemas reais da gestão municipal e decisões que trazem consequências.</p>
+  <div class="hero-actions"><button class="btn btn-light" onclick="startGame()">Jogar sozinho</button><button class="btn btn-primary" onclick="showHow()">Como jogar</button></div>
+ </section>
+ <section class="menu-grid">
+  <button class="menu-card" onclick="startGame()"><div class="menu-icon">◎</div><strong>Modo individual</strong><span>Enfrente cinco situações e descubra sua pontuação.</span></button>
+  <button class="menu-card" onclick="showMultiplayer()"><div class="menu-icon">♧</div><strong>Multiplayer</strong><span>Salas online de 2 a 8 jogadores, com anfitrião e celulares.</span></button>
+ </section>
+ <p class="small-note" style="margin:22px 4px 0">O modo individual funciona direto no navegador. O multiplayer exige o Firebase configurado e a página hospedada num endereço acessível pelos celulares.</p>`;
+}
+function showHow(){paint(null);
+ app.innerHTML=`<section class="panel"><div class="section-kicker">Como jogar</div><h2 class="screen-title">Você está no comando</h2><p class="lead">Em cada partida, você enfrentará cinco situações da cidade fictícia de Santa Aurora. Cada situação apresenta um problema, um contexto e três alternativas de decisão.</p><div class="result-list">
+ <div class="result-row"><span>Alternativa mais viável</span><strong>10 pontos</strong></div>
+ <div class="result-row"><span>Viabilidade intermediária</span><strong>5 pontos</strong></div>
+ <div class="result-row"><span>Menor viabilidade no contexto</span><strong>2 pontos</strong></div></div><p class="lead">Depois de escolher, você verá a explicação das consequências da sua decisão. Ao final das cinco rodadas, verá sua pontuação total.</p><div class="actions"><button class="btn btn-outline" onclick="renderHome()">Voltar</button><button class="btn btn-primary" onclick="startGame()">Começar a jogar</button></div></section>`;
+}
+function startGame(){
+ order=Array.from({length:cards.length},(_,i)=>i);
+ for(let i=order.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[order[i],order[j]]=[order[j],order[i]];}
+ // One card from each category, in a shuffled category order.
+ const categories=[...new Set(cards.map(c=>c.category))];
+ const selected=categories.map(cat=>{const ids=cards.map((c,i)=>c.category===cat?i:-1).filter(i=>i>=0);return ids[Math.floor(Math.random()*ids.length)];});
+ for(let i=selected.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[selected[i],selected[j]]=[selected[j],selected[i]];}
+ order=selected;optOrder=order.map(()=>shuffle([0,1,2]));round=0;score=0;answers=[];chosen=null;showCategory();
+}
+function progress(){
+ return `<div class="progress-wrap"><div class="progress-label"><span>RODADA ${round+1} DE 5</span><span>${Math.round(round/5*100)}% concluído</span></div><div class="progress"><div style="width:${round/5*100}%"></div></div></div>`;
+}
+function showCategory(){
+ currentScreen="category";chosen=null;const card=cards[order[round]];paint(card.category);
+ app.innerHTML=`${progress()}<section class="category-screen"><div class="eyebrow">Santa Aurora · Rodada ${round+1} de 5</div><h2>${card.category}</h2><p>${categoryDescriptions[card.category]}</p><button class="btn btn-light" onclick="showSituation()">Conhecer a situação →</button></section>`;
+}
+function showSituation(){
+ currentScreen="situation";const c=cards[order[round]];paint(c.category);
+ app.innerHTML=`${progress()}<section class="panel"><span class="tag">${c.category}</span><h2 class="situation-title">${c.title}</h2><p class="situation-text">${c.situation}</p><div class="resource-box"><strong>Recursos disponíveis</strong><p>${c.resources}</p></div><div class="actions"><button class="btn btn-outline" onclick="showCategory()">Voltar</button><button class="btn btn-primary" onclick="showOptions()">Escolher alternativa →</button></div></section>`;
+}
+function showOptions(){
+ currentScreen="options";chosen=null;const c=cards[order[round]];paint(c.category);
+ app.innerHTML=`${progress()}<section class="panel"><span class="tag">${c.category}</span><h2 class="situation-title">${c.title}</h2><p class="lead">Qual decisão você tomaria?</p><div class="options">${optOrder[round].map((oi,i)=>{const o=c.options[oi];return `<button class="option" id="option${i}" onclick="selectOption(${i})"><span class="option-letter">${String.fromCharCode(65+i)}</span><span class="option-copy"><strong>${o.title}</strong><small>${o.detail}</small></span></button>`}).join("")}</div><div class="actions"><button class="btn btn-outline" onclick="showSituation()">Voltar à situação</button><button class="btn btn-primary" id="confirmBtn" disabled onclick="confirmAnswer()">Confirmar escolha</button></div></section>`;
+}
+function selectOption(i){
+ chosen=i;document.querySelectorAll(".option").forEach((el,n)=>el.classList.toggle("selected",n===i));
+ document.getElementById("confirmBtn").disabled=false;
+}
+function confirmAnswer(){
+ if(chosen===null)return;
+ const c=cards[order[round]],o=c.options[optOrder[round][chosen]];
+ score+=o.points;answers.push({card:c,choice:chosen,option:o});
+ showFeedback();
+}
+function showFeedback(){
+ currentScreen="feedback";const a=answers[round],o=a.option;paint(a.card.category);
+ const level=o.points===10?"Maior viabilidade neste contexto":o.points===5?"Viabilidade intermediária":"Menor viabilidade neste contexto";
+ const color=o.points===10?"success":o.points===5?"warning":"";
+ app.innerHTML=`${progress()}<section class="panel"><div class="section-kicker">Resultado da sua decisão</div><h2 class="screen-title">${a.card.title}</h2><div class="result-score">+${o.points} <span style="font-size:1rem;font-weight:700">pontos</span></div><p><span class="score-pill">${level}</span></p><div class="feedback"><h3>Sua escolha: ${String.fromCharCode(65+a.choice)} — ${o.title}</h3>${o.why}</div><div class="result-row" style="margin-top:16px"><span>Pontuação acumulada</span><strong>${score} pontos</strong></div><div class="actions"><span></span><button class="btn btn-primary" onclick="nextRound()">${round===4?"Ver resultado final":"Próxima rodada →"}</button></div></section>`;
+}
+function nextRound(){round++;if(round<5)showCategory();else showFinal();}
+function gradeFor(s){if(s===50)return "S";if(s>=40)return "A";if(s>=30)return "B";if(s>=20)return "C";return "D";}
+function bestOption(c){return c.options.reduce((m,o)=>o.points>m.points?o:m);}
+const gradeMessages={
+S:"Desempenho perfeito! Você escolheu a alternativa de maior viabilidade nas cinco áreas.",
+A:"Excelente gestão! Você acertou o melhor caminho na maior parte das situações.",
+B:"Boa gestão. Algumas decisões deixaram de considerar o contexto por completo.",
+C:"Gestão mediana. Vale reler as situações e pensar nos recursos e nas consequências de cada escolha.",
+D:"Gestão com dificuldades. Decidir em órgãos públicos exige olhar para recursos, urgência e impacto na população."
+};
+function showFinal(){
+ paint(null);currentScreen="final";const grade=gradeFor(score);
+ const rows=answers.map(a=>{const col=catColors[a.card.category];const ok=a.option.points===10;
+  return `<div class="cat-row" style="--cat:${col[0]};--cat-d:${col[1]}"><div class="cat-head"><span class="cat-name"><i class="cat-dot"></i>${a.card.category}</span><strong>+${a.option.points}</strong></div><div class="cat-title">${a.card.title}</div><div class="cat-bar"><div style="width:${a.option.points*10}%"></div></div><div class="cat-note">${ok?"Você escolheu a alternativa de maior viabilidade.":"Alternativa mais viável: "+bestOption(a.card).title}</div></div>`}).join("");
+ const strong=answers.filter(a=>a.option.points===10).map(a=>a.card.category);
+ const weak=answers.filter(a=>a.option.points<10).map(a=>a.card.category);
+ const summary=`${strong.length?`<p class="lead" style="margin:0 0 6px"><strong>Pontos fortes:</strong> ${strong.join(", ")}.</p>`:""}${weak.length?`<p class="lead" style="margin:0"><strong>Para rever:</strong> ${weak.join(", ")}.</p>`:""}`;
+ app.innerHTML=`<section class="panel" style="text-align:center"><div class="section-kicker">Partida concluída</div><h2 class="screen-title">Sua gestão em Santa Aurora</h2><div class="grade">${grade}</div><p class="lead">Sua classificação nesta partida</p><div class="result-score">${score}<span style="font-size:1rem"> / 50 pontos</span></div><p class="lead">${gradeMessages[grade]}</p><div style="text-align:left;margin-top:18px">${summary}</div><div class="result-list" style="text-align:left">${rows}</div><div class="actions"><button class="btn btn-outline" onclick="renderHome()">Voltar ao início</button><button class="btn btn-primary" onclick="startGame()">Jogar novamente</button></div><p class="small-note">Classificação: D (10–19), C (20–29), B (30–39), A (40–49) e S (50).</p></section>`;
+}
+/* ================= MULTIPLAYER (Firebase Realtime Database) ================= */
+// 1) Crie um projeto em console.firebase.google.com  2) Crie um Realtime Database (modo de teste)
+// 3) Em Configurações do projeto > Seus apps > Web, copie a config e cole abaixo.
+const FIREBASE_CONFIG={apiKey:"AIzaSyDXQq7H-30p5iz8lGuHPz_0SONLBskSPsg",authDomain:"decisao-publica.firebaseapp.com",databaseURL:"https://decisao-publica-default-rtdb.firebaseio.com",projectId:"decisao-publica",storageBucket:"decisao-publica.firebasestorage.app",messagingSenderId:"317568450032",appId:"1:317568450032:web:d237839fcd06622004b135"};
+const MAX_PLAYERS=8,MIN_PLAYERS=2,REVEAL_SECONDS=25;
+let db=null,roomRef=null,connRef=null,room=null,roomCode=null,myId=null,role=null,lastKey="",timer=null,busyKey="",advKey="";
+const L=i=>String.fromCharCode(65+i);
+const arr=x=>Array.isArray(x)?x:Object.values(x||{});
+const esc=t=>String(t).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+function fbReady(){return !FIREBASE_CONFIG.databaseURL.startsWith("COLE")&&!FIREBASE_CONFIG.apiKey.startsWith("COLE");}
+function initFb(){if(db)return true;if(!fbReady()||typeof firebase==="undefined")return false;firebase.initializeApp(FIREBASE_CONFIG);db=firebase.database();return true;}
+function stopMp(){clearInterval(timer);if(roomRef){if(role==="host")roomRef.remove();roomRef.off();}if(connRef)connRef.off();roomRef=connRef=room=null;role=null;lastKey="";}
+function curCard(){const r=room.round;return{c:cards[arr(room.order)[r]],op:arr(arr(room.opt)[r])};}
+function active(){const pl=room.players||{};return Object.keys(pl).filter(id=>pl[id].online!==false);}
+function totals(){const t={};Object.keys(room.players||{}).forEach(id=>t[id]=0);const rs=room.results||{};Object.keys(rs).forEach(r=>{const o=rs[r];if(!o)return;Object.keys(o).forEach(id=>{t[id]=(t[id]||0)+o[id].p;});});return t;}
+function ranking(){const t=totals(),pl=room.players||{};const a=Object.keys(pl).map(id=>({id,name:pl[id].name,score:t[id]||0}));a.sort((x,y)=>y.score-x.score||x.name.localeCompare(y.name));let pos=0,prev=null;a.forEach((p,i)=>{if(p.score!==prev){pos=i+1;prev=p.score;}p.pos=pos;});return a;}
+function rankHTML(me){return ranking().map(p=>`<div class="result-row" style="${p.id===me?"outline:2px solid var(--blue)":""}"><span>${p.pos}º · ${esc(p.name)}</span><strong>${p.score} pts</strong></div>`).join("");}
+function finalHTML(me,host){const rk=ranking(),my=rk.find(p=>p.id===me);
+ return `<section class="panel" style="text-align:center"><div class="section-kicker">Partida concluída</div><h2 class="screen-title">Resultado final</h2>${my?`<div class="grade">${gradeFor(my.score)}</div><p class="lead">Você ficou em ${my.pos}º lugar com ${my.score} / 50 pontos</p>`:""}<div class="result-list" style="text-align:left">${rk.map(p=>`<div class="result-row" style="${p.id===me?"outline:2px solid var(--blue)":""}"><span>${p.pos}º · ${esc(p.name)}</span><strong>${p.score} pts · nota ${gradeFor(p.score)}</strong></div>`).join("")}</div><p class="small-note">Jogadores com a mesma pontuação dividem a mesma posição.</p><div class="actions"><button class="btn btn-outline" onclick="renderHome()">Voltar ao início</button>${host?`<button class="btn btn-primary" onclick="hostCreate()">Nova sala</button>`:""}</div></section>`;}
+function showMultiplayer(){paint(null);stopMp();
+ app.innerHTML=`<section class="panel"><div class="section-kicker">Multiplayer</div><h2 class="screen-title">Jogue com outras pessoas</h2><p class="lead">De ${MIN_PLAYERS} a ${MAX_PLAYERS} jogadores respondem às mesmas situações, cada um no seu celular. As respostas ficam ocultas até todos confirmarem e são reveladas juntas.</p>${fbReady()?"":`<div class="notice" style="background:#fff6e5;border-color:#f0d9a8;color:#8a5a10">Firebase ainda não configurado. Cole sua configuração no início do script (FIREBASE_CONFIG).</div>`}<div class="menu-grid"><button class="menu-card" onclick="hostCreate()"><div class="menu-icon">▣</div><strong>Criar sala (anfitrião)</strong><span>Use no computador. Gera o código e controla a partida.</span></button><button class="menu-card" onclick="renderJoin()"><div class="menu-icon">☰</div><strong>Entrar em uma sala</strong><span>Use o celular com o código do anfitrião.</span></button></div><div class="actions"><button class="btn btn-outline" onclick="renderHome()">Voltar ao início</button></div></section>`;}
+
+/* ---------- ANFITRIÃO ---------- */
+function hostCreate(){
+ if(!initFb())return alert("Configure o Firebase no início do script (FIREBASE_CONFIG).");
+ stopMp();role="host";busyKey=advKey="";
+ const l="ABCDEFGHJKLMNPQRSTUVWXYZ";roomCode=Array.from({length:4},()=>l[Math.floor(Math.random()*l.length)]).join("");
+ roomRef=db.ref("rooms/"+roomCode);
+ roomRef.set({status:"lobby",round:0,created:Date.now()}).then(()=>{
+  roomRef.on("value",s=>{room=s.val();if(room){hostRender();hostCheck();}});
+  timer=setInterval(hostTick,500);
+ }).catch(e=>{role=null;roomRef=null;alert("Erro ao criar a sala: "+e.message);});
+}
+function hostStart(){
+ const cats=[...new Set(cards.map(c=>c.category))];
+ const sel=shuffle(cats.map(cat=>{const ids=cards.map((c,i)=>c.category===cat?i:-1).filter(i=>i>=0);return ids[Math.floor(Math.random()*ids.length)];}));
+ roomRef.update({order:sel,opt:sel.map(()=>shuffle([0,1,2])),status:"question",round:0});
+}
+function hostCheck(){
+ if(room.status!=="question")return;
+ const act=active(),ans=(room.answers&&room.answers[room.round])||{};
+ if(act.length&&act.every(id=>ans[id]!==undefined))hostReveal();
+}
+function hostReveal(){
+ const k="r"+room.round;if(busyKey===k)return;busyKey=k;
+ const {c,op}=curCard(),ans=room.answers[room.round]||{},upd={status:"reveal",deadline:Date.now()+REVEAL_SECONDS*1000};
+ Object.keys(ans).forEach(id=>{upd["results/"+room.round+"/"+id]={c:ans[id],p:c.options[op[ans[id]]].points};});
+ roomRef.update(upd);
+}
+function hostNext(){
+ if(!room||room.status!=="reveal")return;
+ const k="n"+room.round;if(advKey===k)return;advKey=k;
+ if(room.round>=4)roomRef.update({status:"final"});else roomRef.update({status:"question",round:room.round+1,deadline:null});
+}
+function hostEnd(){if(confirm("Encerrar a partida agora?"))roomRef.update({status:"final"});}
+function hostTick(){
+ if(role!=="host"||!room||room.status!=="reveal")return;
+ const s=Math.max(0,Math.ceil((room.deadline-Date.now())/1000)),cd=document.getElementById("cd");
+ if(cd)cd.textContent=s;if(s<=0)hostNext();
+}
+function hostRender(){
+ const st=room.status,pl=room.players||{},ids=Object.keys(pl),n=ids.length;
+ if(st==="lobby"){paint(null);
+  const link=location.href.split("?")[0].split("#")[0]+"?sala="+roomCode;
+  app.innerHTML=`<section class="panel"><div class="section-kicker">Anfitrião · Multiplayer</div><h2 class="screen-title">Código da sala: <span style="letter-spacing:.18em;color:var(--blue)">${roomCode}</span></h2><p class="lead">Os jogadores abrem o link abaixo no celular (ou vão em Multiplayer → Entrar em uma sala) e digitam o código.</p><div class="notice" style="word-break:break-all">${link}</div><h3 style="color:var(--navy)">Jogadores (${n}/${MAX_PLAYERS})</h3><div class="result-list">${n?ids.map(id=>`<div class="result-row"><strong>${esc(pl[id].name)}</strong><span>${pl[id].online===false?"offline":"conectado"}</span></div>`).join(""):`<div class="result-row"><span>Aguardando jogadores…</span></div>`}</div><div class="actions"><button class="btn btn-outline" onclick="showMultiplayer()">Cancelar</button><button class="btn btn-primary" ${active().length<MIN_PLAYERS?"disabled":""} onclick="hostStart()">Iniciar partida (mín. ${MIN_PLAYERS})</button></div></section>`;
+ }else if(st==="question"){
+  const {c,op}=curCard();paint(c.category);round=room.round;const ans=(room.answers&&room.answers[room.round])||{};
+  app.innerHTML=`${progress()}<section class="panel"><span class="tag">${c.category}</span><h2 class="situation-title">${c.title}</h2><p class="situation-text">${c.situation}</p><div class="resource-box"><strong>Recursos disponíveis</strong><p>${c.resources}</p></div><div class="options">${op.map((oi,i)=>`<div class="option" style="cursor:default"><span class="option-letter">${L(i)}</span><span class="option-copy"><strong>${c.options[oi].title}</strong><small>${c.options[oi].detail}</small></span></div>`).join("")}</div><div style="margin-top:18px">${ids.map(id=>`<span class="tag" style="margin:3px;${pl[id].online===false?"opacity:.45":""}">${esc(pl[id].name)} ${ans[id]!==undefined?"✓":"…"}</span>`).join("")}</div><div class="actions"><span class="small-note">${ids.filter(id=>ans[id]!==undefined).length} de ${n} responderam · escolhas ocultas até todos confirmarem</span><button class="btn btn-outline" onclick="hostEnd()">Encerrar partida</button></div></section>`;
+ }else if(st==="reveal"){
+  const {c,op}=curCard();paint(c.category);round=room.round+1;const res=(room.results&&room.results[room.round])||{};
+  app.innerHTML=`${progress()}<section class="panel"><span class="tag">${c.category}</span><h2 class="situation-title">${c.title} — resultado</h2><div class="options">${op.map((oi,i)=>{const o=c.options[oi],who=ids.filter(id=>res[id]&&res[id].c===i).map(id=>esc(pl[id].name));return `<div class="option" style="cursor:default"><span class="option-letter">${L(i)}</span><span class="option-copy"><strong>${o.title}</strong><small><b>${o.points} pontos.</b> ${o.why}</small><small>${who.length?"Escolheram: "+who.join(", "):"Ninguém escolheu esta alternativa."}</small></span></div>`;}).join("")}</div><h3 style="color:var(--navy);margin-top:22px">Ranking parcial</h3><div class="result-list">${rankHTML()}</div><div class="actions"><button class="btn btn-outline" onclick="hostEnd()">Encerrar partida</button><button class="btn btn-primary" onclick="hostNext()">${room.round>=4?"Resultado final":"Próxima rodada"} (<span id="cd">${REVEAL_SECONDS}</span>s)</button></div></section>`;
+ }else if(st==="final"){paint(null);app.innerHTML=finalHTML(null,true);}
+}
+
+/* ---------- JOGADOR ---------- */
+function renderJoin(prefill){
+ paint(null);stopMp();
+ app.innerHTML=`<section class="panel"><div class="section-kicker">Multiplayer</div><h2 class="screen-title">Entrar em uma sala</h2><p class="lead">Digite o código mostrado na tela do anfitrião e o seu nome.</p><div class="options"><input id="jCode" maxlength="4" placeholder="CÓDIGO" value="${esc(prefill||"")}" style="padding:15px;font:inherit;font-size:1.3rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase;border:1.5px solid var(--line);border-radius:13px"><input id="jName" maxlength="16" placeholder="Seu nome" style="padding:15px;font:inherit;border:1.5px solid var(--line);border-radius:13px"></div><div class="actions"><button class="btn btn-outline" onclick="showMultiplayer()">Voltar</button><button class="btn btn-primary" onclick="joinRoom()">Entrar</button></div></section>`;
+}
+function joinRoom(){
+ if(!initFb())return alert("Firebase não configurado neste arquivo.");
+ const code=document.getElementById("jCode").value.trim().toUpperCase(),name=document.getElementById("jName").value.trim();
+ if(code.length!==4||!name)return alert("Digite o código de 4 letras e o seu nome.");
+ const ref=db.ref("rooms/"+code);
+ ref.once("value").then(s=>{
+  const r=s.val();if(!r)return alert("Sala não encontrada.");
+  const pl=r.players||{};let id=null;try{id=sessionStorage.getItem("dp_"+code);}catch(e){}
+  if(!(id&&pl[id])){
+   if(r.status!=="lobby")return alert("A partida já começou.");
+   if(Object.keys(pl).length>=MAX_PLAYERS)return alert("A sala está cheia ("+MAX_PLAYERS+" jogadores).");
+   id=ref.child("players").push().key;
+  }
+  try{sessionStorage.setItem("dp_"+code,id);}catch(e){}
+  stopMp();role="player";roomCode=code;myId=id;roomRef=ref;lastKey="";chosen=null;
+  ref.child("players/"+id+"/name").set(name);
+  connRef=db.ref(".info/connected");
+  connRef.on("value",c=>{if(c.val()){const o=ref.child("players/"+id+"/online");o.onDisconnect().set(false);o.set(true);}});
+  ref.on("value",x=>{room=x.val();playerRender();});
+ }).catch(e=>alert("Erro ao entrar: "+e.message));
+}
+function mpConfirm(){
+ if(chosen===null)return;document.getElementById("confirmBtn").disabled=true;
+ roomRef.child("answers/"+room.round+"/"+myId).set(chosen);chosen=null;
+}
+function playerRender(){
+ if(!room){paint(null);app.innerHTML=`<section class="panel"><h2 class="screen-title">Sala encerrada</h2><p class="lead">O anfitrião encerrou esta sala.</p><div class="actions"><button class="btn btn-primary" onclick="renderHome()">Voltar ao início</button></div></section>`;return;}
+ const st=room.status,r=room.round,pl=room.players||{},ans=(room.answers&&room.answers[r])||{},mine=ans[myId];
+ let key=st+"|"+r+"|"+(mine!==undefined);
+ if(st==="lobby")key+="|"+Object.keys(pl).length;
+ if(st==="question"&&mine!==undefined)key+="|"+Object.keys(ans).length;
+ if(key===lastKey)return;lastKey=key;
+ if(st==="lobby"){paint(null);
+  app.innerHTML=`<section class="panel" style="text-align:center"><div class="section-kicker">Sala ${roomCode}</div><h2 class="screen-title">Você está dentro!</h2><p class="lead">Aguardando o anfitrião iniciar a partida…</p><div class="result-list" style="text-align:left">${Object.keys(pl).map(id=>`<div class="result-row"><strong>${esc(pl[id].name)}</strong><span>${id===myId?"você":""}</span></div>`).join("")}</div></section>`;
+ }else if(st==="question"){
+  const {c,op}=curCard();paint(c.category);round=r;
+  if(mine!==undefined){
+   app.innerHTML=`${progress()}<section class="panel" style="text-align:center"><div class="section-kicker">Resposta enviada</div><h2 class="screen-title">Aguardando os outros jogadores</h2><p class="lead">${Object.keys(ans).length} de ${active().length} já responderam. As escolhas serão reveladas juntas.</p></section>`;
+  }else{
+   chosen=null;
+   app.innerHTML=`${progress()}<section class="panel"><span class="tag">${c.category}</span><h2 class="situation-title">${c.title}</h2><p class="situation-text">${c.situation}</p><div class="resource-box"><strong>Recursos disponíveis</strong><p>${c.resources}</p></div><p class="lead" style="margin-bottom:0">Qual decisão você tomaria?</p><div class="options">${op.map((oi,i)=>`<button class="option" onclick="selectOption(${i})"><span class="option-letter">${L(i)}</span><span class="option-copy"><strong>${c.options[oi].title}</strong><small>${c.options[oi].detail}</small></span></button>`).join("")}</div><div class="actions"><span></span><button class="btn btn-primary" id="confirmBtn" disabled onclick="mpConfirm()">Confirmar escolha</button></div></section>`;
+  }
+ }else if(st==="reveal"){
+  const {c,op}=curCard();paint(c.category);round=r+1;const res=(room.results&&room.results[r]&&room.results[r][myId]);
+  let body;
+  if(res){const o=c.options[op[res.c]];const lvl=o.points===10?"Maior viabilidade neste contexto":o.points===5?"Viabilidade intermediária":"Menor viabilidade neste contexto";
+   body=`<div class="result-score">+${o.points} <span style="font-size:1rem;font-weight:700">pontos</span></div><p><span class="score-pill">${lvl}</span></p><div class="feedback"><h3>Sua escolha: ${L(res.c)} — ${o.title}</h3>${o.why}</div>`;
+  }else body=`<div class="feedback">Você não respondeu nesta rodada.</div>`;
+  app.innerHTML=`${progress()}<section class="panel"><div class="section-kicker">Resultado da rodada</div><h2 class="screen-title">${c.title}</h2>${body}<h3 style="color:var(--navy);margin-top:22px">Ranking parcial</h3><div class="result-list">${rankHTML(myId)}</div><p class="small-note">A próxima rodada começa automaticamente.</p></section>`;
+ }else if(st==="final"){paint(null);app.innerHTML=finalHTML(myId,false);}
+}
+
+const qsSala=new URLSearchParams(location.search).get("sala");
+if(qsSala)renderJoin(qsSala.toUpperCase());else renderHome();
+</script>
+</body>
+</html>
